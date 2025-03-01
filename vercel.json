@@ -1,5 +1,16 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "version": 2,
+  "public": true,
+  "builds": [
+    { "src": "public/**/*", "use": "@vercel/static" },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.css", "use": "@vercel/static" },
+    { "src": "*.js", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/favicon.ico", "dest": "/public/favicon-32x32.png" },
+    { "src": "/manifest.json", "dest": "/public/manifest.json" },
+    { "src": "/public/(.*)", "dest": "/public/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
