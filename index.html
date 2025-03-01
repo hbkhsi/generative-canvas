@@ -4,18 +4,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
     <meta charset="utf-8" />
 
   </head>
   <body>
-    <button id="toggle-gui" onclick="toggleGUI()">GUI表示/非表示 (H)</button>
+    <button id="toggle-gui" onclick="toggleGUI()">View/Hide Control Panel (H)</button>
     <div id="control-panel">
-      <button onclick="handleMode(0)">refresh (0)</button>
-      <button onclick="handleMode(1)">vine mode (1)</button>
-      <button onclick="handleMode(2)">paint mode (2)</button>
-      <button onclick="handleMode(3)">perlin mode (3)</button>
-      <button onclick="handleMode(4)">clear canvas (4)</button>
-      <button onclick="saveArtwork()">save artwork (S)</button>
+      <button onclick="handleMode(0)">Refresh (0)</button>
+      <button onclick="handleMode(1)">Vine Mode (1)</button>
+      <button onclick="handleMode(2)">Paint Mode (2)</button>
+      <button onclick="handleMode(3)">Perlin Mode (3)</button>
+      <button onclick="handleMode(4)">Clear Canvas (4)</button>
+      <button onclick="saveArtwork()">Save Artwork (S)</button>
+      <div id="palette-display"></div>
     </div>
     <main>
     </main>

@@ -17,6 +17,16 @@ const colorPalettes = [
   ["#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51"], // アースカラー
   ["#D8E2DC", "#FFE5D9", "#FFCAD4", "#F4ACB7", "#9D8189"], // パステル
   ["#03045E", "#023E8A", "#0077B6", "#0096C7", "#00B4D8"], // ブルースケール
+  ["#DCD6F7", "#A6B1E1", "#B4869F", "#985F6F", "#4E4C67"], // ミスティックムーン
+  ["#CCFBF1", "#98F5E1", "#64DFDF", "#0D9488", "#075985"], // オーシャンブリーズ
+  ["#F9EAFF", "#E5B8F4", "#C147E9", "#810CA8", "#2D033B"], // ミスティックパープル
+  ["#FAF1E4", "#CEDEBD", "#9EB384", "#435334", "#1F2916"], // フォレストシャドウ
+  ["#EEF5FF", "#B4D4FF", "#86B6F6", "#176B87", "#001B79"], // クリスタルウォーター
+  ["#FFE5E5", "#FFC4C4", "#FF9EAA", "#FF597B", "#FF2E63"], // サンセットグロウ
+  ["#ECF2FF", "#E3DFFD", "#E5D1FA", "#FFF2F2", "#FFCEFE"], // ソフトドリーム
+  ["#2C3639", "#3F4E4F", "#A27B5C", "#DCD7C9", "#EAE3D2"], // アンティークウッド
+  ["#F8F0E5", "#EADBC8", "#DAC0A3", "#0F2C59", "#102C57"], // デザートナイト
+  ["#F1F6F9", "#14274E", "#394867", "#9BA4B5", "#F1F6F9"]  // ミッドナイトフォグ
 ];
 
 function timestamp() {
@@ -81,12 +91,80 @@ function draw() {
 }
 
 function selectRandomPalette() {
-  currentPalette = colorPalettes[floor(random(colorPalettes.length))].map(
+  const paletteIndex = floor(random(colorPalettes.length));
+  currentPalette = colorPalettes[paletteIndex].map(
     (hex) => {
       const c = color(hex);
       return color(red(c), green(c), blue(c));
     }
   );
+  updatePaletteDisplay(colorPalettes[paletteIndex]);
+}
+
+function updatePaletteDisplay(hexColors) {
+  const paletteDisplay = document.getElementById('palette-display');
+  paletteDisplay.innerHTML = '';
+  
+  hexColors.forEach((hex, index) => {
+    const colorContainer = document.createElement('div');
+    colorContainer.className = 'color-container';
+    
+    const colorDiv = document.createElement('div');
+    colorDiv.className = 'palette-color';
+    colorDiv.style.backgroundColor = hex;
+    
+    const colorPicker = document.createElement('input');
+    colorPicker.type = 'color';
+    colorPicker.value = hex;
+    colorPicker.className = 'hidden-color-picker';
+    
+    colorDiv.addEventListener('click', () => {
+      colorPicker.click();
+    });
+    
+    colorPicker.addEventListener('input', (e) => {
+      const newColor = e.target.value;
+      colorDiv.style.backgroundColor = newColor;
+      updatePaletteFromColors();
+    });
+    
+    colorContainer.appendChild(colorDiv);
+    colorContainer.appendChild(colorPicker);
+    paletteDisplay.appendChild(colorContainer);
+  });
+}
+
+function updatePaletteFromColors() {
+  const colorDivs = document.querySelectorAll('.palette-color');
+  const hexColors = Array.from(colorDivs).map(div => {
+    const rgb = div.style.backgroundColor;
+    const [r, g, b] = rgb.match(/\d+/g).map(Number);
+    return rgbToHex(r, g, b);
+  });
+  
+  // パレットを更新
+  currentPalette = hexColors.map(hex => {
+    const c = color(hex);
+    return color(red(c), green(c), blue(c));
+  });
+
+  // ブラシの色を更新
+  brushes.forEach(brush => {
+    const newColor = color(random(currentPalette));
+    brush.color = newColor;
+    brush.cachedColor = {
+      r: red(newColor),
+      g: green(newColor),
+      b: blue(newColor)
+    };
+  });
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(x => {
+    const hex = x.toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  }).join('');
 }
 
 function initializeBrushes() {
