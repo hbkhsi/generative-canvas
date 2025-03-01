@@ -1,0 +1,63 @@
+html, body {
+    margin: 0;
+    padding: 0;
+  }
+  canvas {
+    display: block;
+  }
+  
+#toggle-gui {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    z-index: 1001;
+    font-size: 12px;
+    backdrop-filter: blur(4px);
+}
+
+#toggle-gui:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+#control-panel {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 4px;
+    z-index: 1000;
+    transition: opacity 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+
+#control-panel.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#control-panel button {
+    display: block;
+    width: 160px;
+    margin: 3px 0;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    font-size: 12px;
+    text-align: left;
+    transition: background 0.2s ease;
+}
+
+#control-panel button:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+  

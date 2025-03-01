@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <button id="toggle-gui" onclick="toggleGUI()">GUI表示/非表示 (H)</button>
+    <div id="control-panel">
+      <button onclick="handleMode(0)">refresh (0)</button>
+      <button onclick="handleMode(1)">vine mode (1)</button>
+      <button onclick="handleMode(2)">paint mode (2)</button>
+      <button onclick="handleMode(3)">perlin mode (3)</button>
+      <button onclick="handleMode(4)">clear canvas (4)</button>
+      <button onclick="saveArtwork()">save artwork (S)</button>
+    </div>
+    <main>
+    </main>
+    <script src="sketch.js"></script>
+  </body>
+</html>
