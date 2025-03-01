@@ -1,14 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <title>Generative Canvas - Interactive Digital Art Creation</title>
+    <meta name="description" content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects. An interactive canvas experience with customizable color palettes." />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#4ECDC4">
+    
+    <!-- Additional SEO -->
+    <meta name="keywords" content="generative art, digital art, creative coding, p5.js, interactive art, brush effects, vine patterns, paint strokes, Perlin noise">
+    <meta name="author" content="Generative Canvas">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://generative-canvas.vercel.app/">
+    
+    <!-- OGP Basic -->
+    <meta property="og:title" content="Generative Canvas - Interactive Digital Art Creation" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://generative-canvas.vercel.app/" />
+    <meta property="og:image" content="https://generative-canvas.vercel.app/ogp.png" />
+    <meta property="og:description" content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects. An interactive canvas experience with customizable color palettes." />
+    <meta property="og:site_name" content="Generative Canvas" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Generative Canvas - Interactive Digital Art Creation" />
+    <meta name="twitter:description" content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects." />
+    <meta name="twitter:image" content="https://generative-canvas.vercel.app/ogp.png" />
+    
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- External Resources -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
-    <meta charset="utf-8" />
-
   </head>
   <body>
     <button id="toggle-gui" onclick="toggleGUI()">View/Hide Control Panel (H)</button>
