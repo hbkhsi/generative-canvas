@@ -10,6 +10,10 @@ const BASE_SCREEN_WIDTH = 1920;
 const BASE_SCREEN_HEIGHT = 1080;
 let screenScaleFactor = 1;
 
+// Slider controlled parameters
+let strokeSliderValue = 1;
+let noiseSliderValue = 1;
+
 // カラーパレットの定義
 const colorPalettes = [
   ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEEAD"], // 暖色系
@@ -26,7 +30,7 @@ const colorPalettes = [
   ["#ECF2FF", "#E3DFFD", "#E5D1FA", "#FFF2F2", "#FFCEFE"], // ソフトドリーム
   ["#2C3639", "#3F4E4F", "#A27B5C", "#DCD7C9", "#EAE3D2"], // アンティークウッド
   ["#F8F0E5", "#EADBC8", "#DAC0A3", "#0F2C59", "#102C57"], // デザートナイト
-  ["#F1F6F9", "#14274E", "#394867", "#9BA4B5", "#F1F6F9"]  // ミッドナイトフォグ
+  ["#F1F6F9", "#14274E", "#394867", "#9BA4B5", "#F1F6F9"], // ミッドナイトフォグ
 ];
 
 function timestamp() {
@@ -81,7 +85,7 @@ function draw() {
     brushes.forEach((brush) => {
       brush.addToPos(
         random(-brush.step, brush.step),
-        random(-brush.step, brush.step)
+        random(-brush.step, brush.step),
       );
       brush.updateSegmentsPos().draw(drawingBuffer);
     });
@@ -92,42 +96,40 @@ function draw() {
 
 function selectRandomPalette() {
   const paletteIndex = floor(random(colorPalettes.length));
-  currentPalette = colorPalettes[paletteIndex].map(
-    (hex) => {
-      const c = color(hex);
-      return color(red(c), green(c), blue(c));
-    }
-  );
+  currentPalette = colorPalettes[paletteIndex].map((hex) => {
+    const c = color(hex);
+    return color(red(c), green(c), blue(c));
+  });
   updatePaletteDisplay(colorPalettes[paletteIndex]);
 }
 
 function updatePaletteDisplay(hexColors) {
-  const paletteDisplay = document.getElementById('palette-display');
-  paletteDisplay.innerHTML = '';
-  
+  const paletteDisplay = document.getElementById("palette-display");
+  paletteDisplay.innerHTML = "";
+
   hexColors.forEach((hex, index) => {
-    const colorContainer = document.createElement('div');
-    colorContainer.className = 'color-container';
-    
-    const colorDiv = document.createElement('div');
-    colorDiv.className = 'palette-color';
+    const colorContainer = document.createElement("div");
+    colorContainer.className = "color-container";
+
+    const colorDiv = document.createElement("div");
+    colorDiv.className = "palette-color";
     colorDiv.style.backgroundColor = hex;
-    
-    const colorPicker = document.createElement('input');
-    colorPicker.type = 'color';
+
+    const colorPicker = document.createElement("input");
+    colorPicker.type = "color";
     colorPicker.value = hex;
-    colorPicker.className = 'hidden-color-picker';
-    
-    colorDiv.addEventListener('click', () => {
+    colorPicker.className = "hidden-color-picker";
+
+    colorDiv.addEventListener("click", () => {
       colorPicker.click();
     });
-    
-    colorPicker.addEventListener('input', (e) => {
+
+    colorPicker.addEventListener("input", (e) => {
       const newColor = e.target.value;
       colorDiv.style.backgroundColor = newColor;
       updatePaletteFromColors();
     });
-    
+
     colorContainer.appendChild(colorDiv);
     colorContainer.appendChild(colorPicker);
     paletteDisplay.appendChild(colorContainer);
@@ -135,36 +137,41 @@ function updatePaletteDisplay(hexColors) {
 }
 
 function updatePaletteFromColors() {
-  const colorDivs = document.querySelectorAll('.palette-color');
-  const hexColors = Array.from(colorDivs).map(div => {
+  const colorDivs = document.querySelectorAll(".palette-color");
+  const hexColors = Array.from(colorDivs).map((div) => {
     const rgb = div.style.backgroundColor;
     const [r, g, b] = rgb.match(/\d+/g).map(Number);
     return rgbToHex(r, g, b);
   });
-  
+
   // パレットを更新
-  currentPalette = hexColors.map(hex => {
+  currentPalette = hexColors.map((hex) => {
     const c = color(hex);
     return color(red(c), green(c), blue(c));
   });
 
   // ブラシの色を更新
-  brushes.forEach(brush => {
+  brushes.forEach((brush) => {
     const newColor = color(random(currentPalette));
     brush.color = newColor;
     brush.cachedColor = {
       r: red(newColor),
       g: green(newColor),
-      b: blue(newColor)
+      b: blue(newColor),
     };
   });
 }
 
 function rgbToHex(r, g, b) {
-  return '#' + [r, g, b].map(x => {
-    const hex = x.toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
-  }).join('');
+  return (
+    "#" +
+    [r, g, b]
+      .map((x) => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("")
+  );
 }
 
 function initializeBrushes() {
@@ -175,7 +182,7 @@ function initializeBrushes() {
       random(width),
       random(height),
       segmentCount,
-      col
+      col,
     );
 
     // ブラシ初期化時にモードを未設定状態に
@@ -195,13 +202,15 @@ class VineBrush {
     this.cachedColor = {
       r: red(col),
       g: green(col),
-      b: blue(col)
+      b: blue(col),
     };
     this.r = 0.1;
     this.step = 0;
     this.dist = 0;
     this.strokeWgt = 0;
     this.noiseScale = 0;
+    this.baseStrokeWgt = 0;
+    this.baseNoiseScale = 0;
     this.fillAlpha = 0;
     this.strokeAlpha = 0;
     this.scale = 0;
@@ -220,8 +229,10 @@ class VineBrush {
         case 0:
           this.dist = 1 * screenScaleFactor;
           this.step = 30 * screenScaleFactor;
-          this.strokeWgt = 0.5 * screenScaleFactor;
-          this.noiseScale = 0.05;
+          this.baseStrokeWgt = 0.5 * screenScaleFactor;
+          this.baseNoiseScale = 0.05;
+          this.strokeWgt = this.baseStrokeWgt * strokeSliderValue;
+          this.noiseScale = this.baseNoiseScale * noiseSliderValue;
           this.fillAlpha = 10;
           this.strokeAlpha = 20;
           this.scale = 4 * screenScaleFactor;
@@ -229,8 +240,10 @@ class VineBrush {
         case 1:
           this.dist = 1 * screenScaleFactor;
           this.step = 20 * screenScaleFactor;
-          this.strokeWgt = 5 * screenScaleFactor;
-          this.noiseScale = 0.5;
+          this.baseStrokeWgt = 5 * screenScaleFactor;
+          this.baseNoiseScale = 0.5;
+          this.strokeWgt = this.baseStrokeWgt * strokeSliderValue;
+          this.noiseScale = this.baseNoiseScale * noiseSliderValue;
           this.fillAlpha = 20;
           this.strokeAlpha = 20;
           this.scale = 20 * screenScaleFactor;
@@ -238,8 +251,10 @@ class VineBrush {
         case 2:
           this.dist = 1 * screenScaleFactor;
           this.step = 40 * screenScaleFactor;
-          this.strokeWgt = 1 * screenScaleFactor;
-          this.noiseScale = 0.5;
+          this.baseStrokeWgt = 1 * screenScaleFactor;
+          this.baseNoiseScale = 0.5;
+          this.strokeWgt = this.baseStrokeWgt * strokeSliderValue;
+          this.noiseScale = this.baseNoiseScale * noiseSliderValue;
           this.fillAlpha = 20;
           this.strokeAlpha = 70;
           this.scale = 10 * screenScaleFactor;
@@ -284,26 +299,26 @@ class VineBrush {
       this.cachedColor.r,
       this.cachedColor.g,
       this.cachedColor.b,
-      this.strokeAlpha
+      this.strokeAlpha,
     );
     buffer.fill(
       this.cachedColor.r,
       this.cachedColor.g,
       this.cachedColor.b,
-      this.fillAlpha
+      this.fillAlpha,
     );
     buffer.strokeWeight(this.strokeWgt);
 
     for (let i = this.segments - 1; i > -1; --i) {
       buffer.push();
       buffer.translate(this.posArr[i].x, this.posArr[i].y);
-      
+
       if (i > 0) {
         buffer.rotate(
           atan2(
             this.posArr[i].y - this.posArr[i - 1].y,
-            this.posArr[i].x - this.posArr[i - 1].x
-          )
+            this.posArr[i].x - this.posArr[i - 1].x,
+          ),
         );
       }
 
@@ -311,7 +326,7 @@ class VineBrush {
         this.r / 2 +
         noise(
           this.posArr[i].x * this.noiseScale,
-          this.posArr[i].y * this.noiseScale
+          this.posArr[i].y * this.noiseScale,
         ) *
           this.scale;
       buffer.ellipse(0, 0, noisyR * 2, noisyR * 2);
@@ -326,7 +341,7 @@ class VineBrush {
       this.cachedColor.r,
       this.cachedColor.g,
       this.cachedColor.b,
-      this.strokeAlpha
+      this.strokeAlpha,
     );
     buffer.strokeWeight(0.5 * screenScaleFactor);
 
@@ -399,4 +414,22 @@ function saveArtwork() {
 function toggleGUI() {
   const controlPanel = document.getElementById("control-panel");
   controlPanel.classList.toggle("hidden");
+}
+
+function handleStrokeSlider(value) {
+  strokeSliderValue = parseFloat(value);
+  brushes.forEach((brush) => {
+    if (brush.baseStrokeWgt !== undefined) {
+      brush.strokeWgt = brush.baseStrokeWgt * strokeSliderValue;
+    }
+  });
+}
+
+function handleNoiseSlider(value) {
+  noiseSliderValue = parseFloat(value);
+  brushes.forEach((brush) => {
+    if (brush.baseNoiseScale !== undefined) {
+      brush.noiseScale = brush.baseNoiseScale * noiseSliderValue;
+    }
+  });
 }
