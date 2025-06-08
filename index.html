@@ -1,50 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Generative Canvas - Interactive Digital Art Creation</title>
-    <meta name="description" content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects. An interactive canvas experience with customizable color palettes." />
-    
+    <meta
+      name="description"
+      content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects. An interactive canvas experience with customizable color palettes."
+    />
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/public/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/public/apple-touch-icon.png">
-    <link rel="manifest" href="/public/manifest.json">
-    <meta name="theme-color" content="#4ECDC4">
-    
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/public/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/public/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/public/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="/public/manifest.json" />
+    <meta name="theme-color" content="#4ECDC4" />
+
     <!-- Additional SEO -->
-    <meta name="keywords" content="generative art, digital art, creative coding, p5.js, interactive art, brush effects, vine patterns, paint strokes, Perlin noise">
-    <meta name="author" content="Generative Canvas">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://generative-canvas.vercel.app/">
-    
+    <meta
+      name="keywords"
+      content="generative art, digital art, creative coding, p5.js, interactive art, brush effects, vine patterns, paint strokes, Perlin noise"
+    />
+    <meta name="author" content="Generative Canvas" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://generative-canvas.vercel.app/" />
+
     <!-- OGP Basic -->
-    <meta property="og:title" content="Generative Canvas - Interactive Digital Art Creation" />
+    <meta
+      property="og:title"
+      content="Generative Canvas - Interactive Digital Art Creation"
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://generative-canvas.vercel.app/" />
-    <meta property="og:image" content="https://generative-canvas.vercel.app/public/ogp.png" />
-    <meta property="og:description" content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects. An interactive canvas experience with customizable color palettes." />
+    <meta
+      property="og:image"
+      content="https://generative-canvas.vercel.app/public/ogp.png"
+    />
+    <meta
+      property="og:description"
+      content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects. An interactive canvas experience with customizable color palettes."
+    />
     <meta property="og:site_name" content="Generative Canvas" />
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Generative Canvas - Interactive Digital Art Creation" />
-    <meta name="twitter:description" content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects." />
-    <meta name="twitter:image" content="https://generative-canvas.vercel.app/public/ogp.png" />
-    
+    <meta
+      name="twitter:title"
+      content="Generative Canvas - Interactive Digital Art Creation"
+    />
+    <meta
+      name="twitter:description"
+      content="Create beautiful generative art with three unique brush modes: vine patterns, dynamic paint strokes, and Perlin noise effects."
+    />
+    <meta
+      name="twitter:image"
+      content="https://generative-canvas.vercel.app/public/ogp.png"
+    />
+
     <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- External Resources -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.1/addons/p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <button id="toggle-gui" onclick="toggleGUI()">View/Hide Control Panel (H)</button>
+    <button id="toggle-gui" onclick="toggleGUI()">
+      View/Hide Control Panel (H)
+    </button>
     <div id="control-panel">
       <button onclick="handleMode(0)">Refresh (0)</button>
       <button onclick="handleMode(1)">Vine Mode (1)</button>
@@ -53,9 +96,36 @@
       <button onclick="handleMode(4)">Clear Canvas (4)</button>
       <button onclick="saveArtwork()">Save Artwork (S)</button>
       <div id="palette-display"></div>
+      <div id="slider-controls">
+        <div class="slider-control">
+          <label for="stroke-slider">Stroke Weight</label>
+          <input
+            id="stroke-slider"
+            type="range"
+            min="0.1"
+            max="10"
+            step="0.1"
+            value="1"
+            oninput="handleStrokeSlider(this.value)"
+            aria-label="Stroke Weight"
+          />
+        </div>
+        <div class="slider-control">
+          <label for="noise-slider">Noise Scale</label>
+          <input
+            id="noise-slider"
+            type="range"
+            min="0.1"
+            max="2"
+            step="0.1"
+            value="1"
+            oninput="handleNoiseSlider(this.value)"
+            aria-label="Noise Scale"
+          />
+        </div>
+      </div>
     </div>
-    <main>
-    </main>
+    <main></main>
     <script src="sketch.js"></script>
   </body>
 </html>
