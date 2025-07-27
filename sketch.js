@@ -5,6 +5,10 @@ const segmentCount = 200;
 let currentPalette;
 let drawingBuffer;
 
+let randomValues = [];
+let randomIndex = 0;
+const RANDOM_POOL_SIZE = 1000;
+
 // 基準となるスクリーンサイズ
 const BASE_SCREEN_WIDTH = 1920;
 const BASE_SCREEN_HEIGHT = 1080;
@@ -55,6 +59,7 @@ function setup() {
   frameRate(60);
   selectRandomPalette();
   initializeBrushes();
+  generateRandomPool();
 
   // 初回起動時にランダムなモードを選択
   const initialMode = floor(random(3));
@@ -73,6 +78,20 @@ function windowResized() {
   initializeBrushes();
 }
 
+function generateRandomPool() {
+  randomValues = [];
+  for (let i = 0; i < RANDOM_POOL_SIZE; i++) {
+    randomValues.push(random(-1, 1));
+  }
+  randomIndex = 0;
+}
+
+function getNextRandom(min, max) {
+  const value = randomValues[randomIndex] * (max - min) / 2;
+  randomIndex = (randomIndex + 1) % RANDOM_POOL_SIZE;
+  return value;
+}
+
 function updateScreenScaleFactor() {
   // 画面の対角線の長さを基準にスケールを計算
   const currentDiagonal = sqrt(sq(windowWidth) + sq(windowHeight));
@@ -84,8 +103,8 @@ function draw() {
   if (isBrushMoving) {
     brushes.forEach((brush) => {
       brush.addToPos(
-        random(-brush.step, brush.step),
-        random(-brush.step, brush.step),
+        getNextRandom(-brush.step, brush.step),
+        getNextRandom(-brush.step, brush.step),
       );
       brush.updateSegmentsPos().draw(drawingBuffer);
     });
